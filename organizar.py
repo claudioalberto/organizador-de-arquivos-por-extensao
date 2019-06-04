@@ -1,29 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import sys
-from os import listdir, makedirs, remove
-from os.path import isfile, dirname, realpath, splitext, exists, join
-import shutil
+import os.path
 import core
 
+
 # status
-readed_folders = False #status - indica se todos os arquivos foram lidos.
-get_extensions = False #status - indica se foi capturado as extensões dos arquivos que estão na pasta.
-created_folders = False #status - indica se as pastas organizadoras já foram criadas.
-copied_folders = False #status - indica se os arquivos foram copiados para as respectivas pastas.
-deleted_files_old = False #status - indica se os arquivos antigos.
-done = False #status - indica se todos os processos foram realizados.
-
-
-# Pega o diretorio atual de onde está sendo executado o programa
-current_path = dirname(realpath(__file__))
-
-#armazena as extensões encontradas na pasta
-list_extensions = []
-
-# armazena os nomes dos arquivos armazenado na pasta
-list_files = [f for f in listdir(current_path) if isfile(f)]
-
+readed_folders = False  # status - indica se todos os arquivos foram lidos.
+get_extensions = False  # status - indica se foi capturado as extensões dos arquivos que estão na pasta.
+created_folders = False  # status - indica se as pastas organizadoras já foram criadas.
+copied_folders = False  # status - indica se os arquivos foram copiados para as respectivas pastas.
+deleted_files_old = False  # status - indica se os arquivos antigos.
+done = False  # status - indica se todos os processos foram realizados.
 
 
 # verifica se todos as funções foram executadas com sucesso
@@ -33,27 +20,37 @@ def verify_is_done():
     else:
         return False
 
-# Reports
-# print('Current Directory: {}'.format(current_path))
-# print('Files: {}'.format(list_files))
-# print('Extensions: {}'.format(list_extensions))
-readed_folders = core.verify_path_is_folder(current_path)
-get_extensions = core.get_extension_from_file(list_files, list_extensions)
-created_folders = core.create_directories_with_name_of_extension(list_extensions)
-copied_folders = core.copy_files_to_folder(list_files, current_path, current_path)
-deleted_files_old = core.delete_files_old(list_files, current_path)
-done =  verify_is_done()
+
+def main():
+    # diretorio atual de onde está sendo executado o programa
+    current_path = core.set_folder_to_organize('C:\\Users\\cafgd\\Desktop')
+
+    # armazena os dados(nome do Arquivo, extensão do arquivo e o caminho do arquivo)
+    # de todos os arquivos encontrados na pasta
+    all_files = core.get_list_files_from_directory(current_path)
+
+    # armazena apenas o nome arquivos encontradas
+    files_founded = []
+    [files_founded.append(fc[0]) for fc in all_files if fc[0] not in files_founded]
+    # armazena as extensões encontradas
+    extensions_founded = []
+    [extensions_founded.append(fc[1]) for fc in all_files if fc[1] not in extensions_founded]
+    # armazena apenas o caminho dos extensões encontradas
+    files_path_founded = []
+    [files_path_founded.append(fc[2]) for fc in all_files if fc[2] not in files_path_founded]
+
+    # print(files_founded)
+    # print(extensions_founded)
+    # print(files_path_founded)
+
+    core.verify_path_is_folder(current_path)
+    print(current_path)
+    core.create_directories_with_name_of_extension(extensions_founded, current_path)
+    core.copy_files_to_folder(all_files, current_path)
+    opt = str(input("Deseja deletar os arquivos antigos? [y/n]"))
+    if opt == "y":
+        core.delete_files_old(files_path_founded)
 
 
-if readed_folders:
-    print('Pasta lida com sucesso!')
-if get_extensions:
-    print('Lista de extensões criadas com sucesso!')
-if created_folders:
-    print('Pastas organizadoras criadas com sucesso')
-if copied_folders:
-    print('Arquivos copiados paras as pastas com sucesso')
-if deleted_files_old:
-    print('Arquvos antigos deletados com sucesso')
-if done:
-    print('Organização realizado com sucesso')
+if __name__ == '__main__':
+    main()
