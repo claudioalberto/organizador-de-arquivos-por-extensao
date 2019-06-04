@@ -4,6 +4,7 @@ import sys
 from os import listdir, makedirs, remove
 from os.path import isfile, dirname, realpath, splitext, exists, join
 import shutil
+import core
 
 # status
 readed_folders = False #status - indica se todos os arquivos foram lidos.
@@ -23,55 +24,7 @@ list_extensions = []
 # armazena os nomes dos arquivos armazenado na pasta
 list_files = [f for f in listdir(current_path) if isfile(f)]
 
-#verifica a pasta onde está sendo executado é realmente uma pasta valida
-def verify_path_is_folder(folder_path):
-    if not isfile(folder_path):
-        return True
-    else:
-        return False
 
-# Pega as extensoes dos arquivos dessa pasta e armazena em array
-def get_extension_from_file(list_of_files, output_array):
-    try:
-        for f in list_of_files:
-            output_array.append(splitext(f)[1])
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-# Cria as pastas com os nomes das extensões
-def create_directories_with_name_of_extension(list_of_extensions):
-    try:
-        for f in list_of_extensions:
-            namefolder = str(f).replace('.', '')
-            if not exists(namefolder):
-                makedirs(namefolder)
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-# copia os arquivos para as pastas
-def copy_files_to_folder(list_of_files, folder_origin, folder_destiny):
-    try:
-        for f in list_of_files:
-            namefoldercurrent = splitext(f)[1].replace('.','')
-            shutil.copy(folder_origin + '\\' + f, folder_destiny + '\\' + namefoldercurrent + '\\' + f)
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-#deleta os arquivos antigos
-def delete_files_old(list_of_files, folder_path):
-    try:
-        for f in list_of_files:
-            remove(folder_path + '\\' + f)
-        return True
-    except Exception as e:
-        print(e)
-        return False
 
 # verifica se todos as funções foram executadas com sucesso
 def verify_is_done():
@@ -84,11 +37,11 @@ def verify_is_done():
 # print('Current Directory: {}'.format(current_path))
 # print('Files: {}'.format(list_files))
 # print('Extensions: {}'.format(list_extensions))
-readed_folders = verify_path_is_folder(current_path)
-get_extensions = get_extension_from_file(list_files, list_extensions)
-created_folders = create_directories_with_name_of_extension(list_extensions)
-copied_folders = copy_files_to_folder(list_files, current_path, current_path)
-deleted_files_old = delete_files_old(list_files, current_path)
+readed_folders = core.verify_path_is_folder(current_path)
+get_extensions = core.get_extension_from_file(list_files, list_extensions)
+created_folders = core.create_directories_with_name_of_extension(list_extensions)
+copied_folders = core.copy_files_to_folder(list_files, current_path, current_path)
+deleted_files_old = core.delete_files_old(list_files, current_path)
 done =  verify_is_done()
 
 
