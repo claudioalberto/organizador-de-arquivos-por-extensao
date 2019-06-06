@@ -4,9 +4,9 @@ from os import path, listdir
 
 
 # retorna o caminho da pasta que será organizada
-def set_path_to_organize(path_folder):
-    if path_folder == '.':
-        return path.dirname(path.realpath(__file__))
+def set_path_to_organize(path_folder=''):
+    if path_folder is '':
+        return os.getcwd()
     else:
         return path_folder
 
@@ -92,4 +92,4 @@ def delete_files_from_list_of_files(list_of_files, path_folder_root='', delete_f
                     print('Arquivos deletados com sucesso!')
         except Exception as err:
             print(err)
-            status=False
+            status = False
