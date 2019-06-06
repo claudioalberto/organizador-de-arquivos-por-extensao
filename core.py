@@ -33,7 +33,7 @@ def get_extensions_from_files(list_files):
 def create_folders_from_name_list(name_list, path_folder, status=False, verbose_mode=False):
     for n in name_list:
         if n != '.ini':
-            folder = path_folder + '\\' + n
+            folder = path_folder + '/' + n
             if not os.path.exists(folder):
                 os.makedirs(folder)
                 status = True
@@ -49,18 +49,18 @@ def copy_files_to_folders_specific(list_files, list_folders, path_folder_root, w
         for f in list_files:
             ext_temp = os.path.splitext(os.path.basename(f))[1].replace('.', '')
             if ext_temp in list_folders:
-                file = path_folder_root + '\\' + ext_temp + '\\' + f
+                file = path_folder_root + '/' + ext_temp + '/' + f
                 if os.path.exists(file):
                     if writable is False:
                         opt = input('AVISO:\nEstamos tentando copiar o arquivo "{}" para a pasta destino, porém já existe um arquivo com o mesmo no diretorio, você deseja substituí-lo?[S/N]'.format(f))
                         if opt == 's' or opt == 'S':
-                            shutil.copy(path_folder_root + '\\' + f, path_folder_root + '\\' + ext_temp)
+                            shutil.copy(path_folder_root + '/' + f, path_folder_root + '/' + ext_temp)
                             status = True
                     else:
-                        shutil.copy(path_folder_root + '\\' + f, path_folder_root + '\\' + ext_temp)
+                        shutil.copy(path_folder_root + '/' + f, path_folder_root + '/' + ext_temp)
                         status = True
                 else:
-                    shutil.copy(path_folder_root + '\\' + f, path_folder_root + '\\' + ext_temp)
+                    shutil.copy(path_folder_root + '/' + f, path_folder_root + '/' + ext_temp)
                     status = True
         if status is True:
             if verbose_mode is True:
@@ -74,7 +74,7 @@ def copy_files_to_folders_specific(list_files, list_folders, path_folder_root, w
 def delete_files_from_list_of_files(list_of_files, path_folder_root='', delete_forced = False, status=False, verbose_mode=False):
     for f in list_of_files:
         if path_folder_root is not '':
-            file = path_folder_root + '\\' + f
+            file = path_folder_root + '/' + f
         else:
             file = f
         try:
@@ -82,7 +82,7 @@ def delete_files_from_list_of_files(list_of_files, path_folder_root='', delete_f
                 os.remove(file)
                 status = True
             else:
-                opt = input('Tem certeza que você deseja deletar essa lista de arquivos?[S/N]')
+                opt = input('Você deseja deletar essa lista de arquivos?[S/N]')
                 if opt is 's' or opt is 'S':
                     os.remove(file)
                     delete_forced=True
